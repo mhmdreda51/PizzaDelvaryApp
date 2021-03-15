@@ -63,16 +63,28 @@ class _PizzaDetails extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: Stack(
-            children: [
-              Image.asset("pizza_order_assets/part1/dish.png"),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Image.asset("pizza_order_assets/part1/pizza-1.png"),
-              ),
-            ],
-          ),
-        ),
+            child: DragTarget<Ingredients>(
+          onAccept: (ingredients) {
+            print("a");
+          },
+          onLeave: (ingredients) {
+            print("b");
+          },
+          onWillAccept: (ingredients) {
+            print("c");
+          },
+          builder: (context, list, rejects) {
+            return Stack(
+              children: [
+                Image.asset("pizza_order_assets/part1/dish.png"),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset("pizza_order_assets/part1/pizza-1.png"),
+                ),
+              ],
+            );
+          },
+        )),
         SizedBox(
           height: 5,
         ),
@@ -129,21 +141,23 @@ class _PizzaIngredientsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final child = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 7),
       child: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset(
-            ingredient.image,
-            fit: BoxFit.contain,
-          ),
-        ),
         height: 45,
         width: 45,
         decoration:
             BoxDecoration(color: Color(0xFFF5EED3), shape: BoxShape.circle),
+        child: Image.asset(
+          ingredient.image,
+          fit: BoxFit.contain,
+        ),
       ),
+    );
+    return Draggable(
+      feedback: child,
+      data: ingredients,
+      child: child,
     );
   }
 }
